@@ -16,7 +16,7 @@ public class Dealer {
                     break;
                 }
 
-                player.addCard(deck.deal());
+                player.receiveCard(deck.deal());
 
             }
 

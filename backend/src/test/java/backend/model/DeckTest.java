@@ -69,8 +69,8 @@ public class DeckTest {
 
         List<Player> players = new ArrayList<>();
 
-        for (int i = 1; i <= 6; i++) {
-            players.add(new Player("Player " + i));
+       for (int i = 1; i <= 6; i++) {
+        players.add(new Player("Player " + i, i));
         }
 
         Dealer dealer = new Dealer();
@@ -95,8 +95,8 @@ public class DeckTest {
         List<Player> players = new ArrayList<>();
 
         for (int i = 1; i <= 6; i++) {
-            players.add(new Player("Player " + i));
-        }
+    players.add(new Player("Player " + i, i));
+}
 
         Dealer dealer = new Dealer();
 
@@ -118,8 +118,8 @@ public class DeckTest {
         List<Player> players = new ArrayList<>();
 
         for (int i = 1; i <= 6; i++) {
-            players.add(new Player("Player " + i));
-        }
+    players.add(new Player("Player " + i, i));
+}
 
         Dealer dealer = new Dealer();
 
