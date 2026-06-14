@@ -4,6 +4,7 @@ import java.util.List;
 
 import backend.model.Deck;
 import backend.model.Player;
+
 public class Dealer {
 
     public void dealCards(Deck deck, List<Player> players) {
@@ -16,11 +17,8 @@ public class Dealer {
                     break;
                 }
 
-                player.receiveCard(deck.deal());
-
+                player.receiveCard(deck.draw()); // FIXED HERE
             }
-
         }
-
     }
 }

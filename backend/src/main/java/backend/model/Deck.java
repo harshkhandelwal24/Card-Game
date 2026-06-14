@@ -1,6 +1,5 @@
 package backend.model;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +9,7 @@ public class Deck {
     private final List<Card> cards;
 
     public Deck() {
-        cards = new ArrayList<>();
+        this.cards = new ArrayList<>();
         createDeck();
     }
 
@@ -19,49 +18,44 @@ public class Deck {
         cards.clear();
 
         for (Suit suit : Suit.values()) {
-
             for (Rank rank : Rank.values()) {
-
                 cards.add(new Card(suit, rank));
-
             }
-
         }
-
     }
+
+    // =========================
+    // CORE METHODS
+    // =========================
 
     public void shuffle() {
-
         Collections.shuffle(cards);
-
     }
 
-    public Card deal() {
-
+    public Card draw() {
         if (cards.isEmpty()) {
-            throw new IllegalStateException("Deck is empty.");
+            throw new IllegalStateException("Deck is empty");
         }
+        return cards.remove(cards.size() - 1);
+    }
 
-        return cards.remove(0);
+    // =========================
+    // COMPATIBILITY METHODS (IMPORTANT)
+    // =========================
 
+    public int size() {
+        return cards.size();
     }
 
     public int remainingCards() {
-
-        return cards.size();
-
+        return cards.size(); // FIX for your tests
     }
 
     public boolean isEmpty() {
-
         return cards.isEmpty();
-
     }
 
     public List<Card> getCards() {
-
         return Collections.unmodifiableList(cards);
-
     }
-
 }

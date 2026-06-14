@@ -1,4 +1,3 @@
-
 package backend.model;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +9,7 @@ public class PlayerTest {
     @Test
     void testReceiveCard() {
 
-        Player player = new Player("Alice", 1);
+        Player player = new Player("Alice");
 
         assertEquals(0, player.getHand().size());
 
@@ -22,7 +21,7 @@ public class PlayerTest {
     @Test
     void testPlayCard() {
 
-        Player player = new Player("Alice", 1);
+        Player player = new Player("Alice");
 
         Card card1 = new Card(Suit.HEARTS, Rank.ACE);
         Card card2 = new Card(Suit.CLUBS, Rank.FIVE);
@@ -41,7 +40,7 @@ public class PlayerTest {
     @Test
     void testPlayMissingCardThrowsException() {
 
-        Player player = new Player("Alice", 1);
+        Player player = new Player("Alice");
 
         Card card = new Card(Suit.SPADES, Rank.KING);
 
@@ -54,23 +53,23 @@ public class PlayerTest {
     @Test
     void testHasSuit() {
 
-        Player player = new Player("Alice", 1);
+        Player player = new Player("Alice");
 
         player.receiveCard(new Card(Suit.HEARTS, Rank.ACE));
         player.receiveCard(new Card(Suit.CLUBS, Rank.FIVE));
         player.receiveCard(new Card(Suit.SPADES, Rank.KING));
 
         assertTrue(player.hasSuit(Suit.HEARTS));
-
         assertFalse(player.hasSuit(Suit.DIAMONDS));
     }
 
     @Test
     void testClearHand() {
 
-        Player player = new Player("Alice", 1);
+        Player player = new Player("Alice");
 
         for (Rank rank : Rank.values()) {
+            
             player.receiveCard(new Card(Suit.HEARTS, rank));
         }
 
@@ -80,5 +79,4 @@ public class PlayerTest {
 
         assertEquals(0, player.getHand().size());
     }
-
 }

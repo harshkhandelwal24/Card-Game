@@ -4,17 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import backend.room.*;
+
 import org.junit.jupiter.api.Test;
 
-import backend.model.Player;
+import backend.room.Room;
+// import backend.model.Player;
 
 public class RoomTest {
 
     @Test
     void testCreateRoom() {
 
-        Player host = new Player("Host", 1);
+        Player host = new Player("Host");
 
         Room room = new Room("ABC123", host);
 
@@ -25,11 +26,11 @@ public class RoomTest {
     @Test
     void testAddPlayer() {
 
-        Player host = new Player("Host", 1);
+        Player host = new Player("Host");
 
         Room room = new Room("ABC123", host);
 
-        room.addPlayer(new Player("Player1", 2));
+        room.addPlayer(new Player("Player1"));
 
         assertEquals(2, room.getPlayerCount());
     }
@@ -37,15 +38,15 @@ public class RoomTest {
     @Test
     void testIsFull() {
 
-        Player host = new Player("Host", 1);
+        Player host = new Player("Host");
 
         Room room = new Room("ABC123", host);
 
-        room.addPlayer(new Player("P1", 2));
-        room.addPlayer(new Player("P2", 3));
-        room.addPlayer(new Player("P3", 4));
-        room.addPlayer(new Player("P4", 5));
-        room.addPlayer(new Player("P5", 6));
+        room.addPlayer(new Player("P1"));
+        room.addPlayer(new Player("P2"));
+        room.addPlayer(new Player("P3"));
+        room.addPlayer(new Player("P4"));
+        room.addPlayer(new Player("P5"));
 
         assertTrue(room.isFull());
     }
@@ -53,30 +54,30 @@ public class RoomTest {
     @Test
     void testAddingSeventhPlayerFails() {
 
-        Player host = new Player("Host", 1);
+        Player host = new Player("Host");
 
         Room room = new Room("ABC123", host);
 
-        room.addPlayer(new Player("P1", 2));
-        room.addPlayer(new Player("P2", 3));
-        room.addPlayer(new Player("P3", 4));
-        room.addPlayer(new Player("P4", 5));
-        room.addPlayer(new Player("P5", 6));
+        room.addPlayer(new Player("P1"));
+        room.addPlayer(new Player("P2"));
+        room.addPlayer(new Player("P3"));
+        room.addPlayer(new Player("P4"));
+        room.addPlayer(new Player("P5"));
 
         assertThrows(
                 IllegalStateException.class,
-                () -> room.addPlayer(new Player("Extra", 7))
+                () -> room.addPlayer(new Player("Extra"))
         );
     }
 
     @Test
     void testDuplicatePlayerRejected() {
 
-        Player host = new Player("Host", 1);
+        Player host = new Player("Host");
 
         Room room = new Room("ABC123", host);
 
-        Player player = new Player("Alice", 2);
+        Player player = new Player("Alice");
 
         room.addPlayer(player);
 
@@ -89,21 +90,19 @@ public class RoomTest {
     @Test
     void testAssignSeats() {
 
-        Player host = new Player("Host", 1);
+        Player host = new Player("Host");
 
         Room room = new Room("ABC123", host);
 
-        room.addPlayer(new Player("P1", 2));
-        room.addPlayer(new Player("P2", 3));
-        room.addPlayer(new Player("P3", 4));
-        room.addPlayer(new Player("P4", 5));
-        room.addPlayer(new Player("P5", 6));
-
-        room.assignSeats();
+        room.addPlayer(new Player("P1"));
+        room.addPlayer(new Player("P2"));
+        room.addPlayer(new Player("P3"));
+        room.addPlayer(new Player("P4"));
+        room.addPlayer(new Player("P5"));
 
         Set<Integer> seats = new HashSet<>();
 
-        room.getPlayers().forEach(p -> seats.add(p.getSeatNumber()));
+        room.getPlayers().forEach(p -> seats.add(room.getSeat(p)));
 
         assertEquals(6, seats.size());
 

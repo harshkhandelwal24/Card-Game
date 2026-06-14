@@ -9,7 +9,7 @@ public class Player {
 
     private final UUID id;
     private final String name;
-    private int seatNumber;
+    // private int seatNumber;
 
     private final List<Card> hand;
 
@@ -34,7 +34,7 @@ public class Player {
     public Player(String name) {
     this.id = UUID.randomUUID();
     this.name = name;
-    this.seatNumber = 0; // assigned by Room
+    // this.seatNumber = 0; // assigned by Room
     this.hand = new ArrayList<>();
     this.connected = true;
     this.ready = false;
@@ -114,13 +114,13 @@ public class Player {
         return name;
     }
 
-    public int getSeatNumber() {
-        return seatNumber;
-    }
+    // public int getSeatNumber() {
+    //     return seatNumber;
+    // }
     
-    public void setSeatNumber(int seatNumber) {
-    this.seatNumber = seatNumber;
-    }
+    // public void setSeatNumber(int seatNumber) {
+    // this.seatNumber = seatNumber;
+    // }
 
     public boolean isConnected() {
         return connected;
@@ -151,7 +151,6 @@ public class Player {
     public String toString() {
         return "Player{" +
                 "name='" + name + '\'' +
-                ", seat=" + seatNumber +
                 ", score=" + totalScore +
                 '}';
     }

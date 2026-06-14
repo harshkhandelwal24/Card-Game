@@ -20,14 +20,11 @@ public class LobbySimulation {
         room.addPlayer(new Player("Emma"));
         room.addPlayer(new Player("Frank"));
 
-        // Step 4: Assign seats (optional if Room already does it internally)
-        room.assignSeats();
-
-        // Step 5: Print lobby state
+        // Step 4: Print lobby state
         System.out.println("=== LOBBY STATE ===");
 
         room.getPlayers().forEach(player -> {
-            System.out.println("Seat " + player.getSeatNumber()
+            System.out.println("Seat " + room.getSeat(player)
                     + " -> " + player.getName());
         });
     }
