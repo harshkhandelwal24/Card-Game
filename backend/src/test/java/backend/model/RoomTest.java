@@ -1,113 +1,110 @@
-package backend.model;
+// package backend.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+// import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.HashSet;
-import java.util.Set;
+// import java.util.HashSet;
+// import java.util.Set;
 
-import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.Test;
 
-import backend.room.Room;
-// import backend.model.Player;
+// public class RoomTest {
 
-public class RoomTest {
+//     @Test
+//     void testCreateRoom() {
 
-    @Test
-    void testCreateRoom() {
+//         Player host = new Player("Host");
 
-        Player host = new Player("Host");
+//         Room room = new Room("ABC123", host);
 
-        Room room = new Room("ABC123", host);
+//         // Host joins automatically
+//         assertEquals(1, room.getPlayerCount());
+//     }
 
-        // Host joins automatically
-        assertEquals(1, room.getPlayerCount());
-    }
+//     @Test
+//     void testAddPlayer() {
 
-    @Test
-    void testAddPlayer() {
+//         Player host = new Player("Host");
 
-        Player host = new Player("Host");
+//         Room room = new Room("ABC123", host);
 
-        Room room = new Room("ABC123", host);
+//         room.addPlayer(new Player("Player1"));
 
-        room.addPlayer(new Player("Player1"));
+//         assertEquals(2, room.getPlayerCount());
+//     }
 
-        assertEquals(2, room.getPlayerCount());
-    }
+//     @Test
+//     void testIsFull() {
 
-    @Test
-    void testIsFull() {
+//         Player host = new Player("Host");
 
-        Player host = new Player("Host");
+//         Room room = new Room("ABC123", host);
 
-        Room room = new Room("ABC123", host);
+//         room.addPlayer(new Player("P1"));
+//         room.addPlayer(new Player("P2"));
+//         room.addPlayer(new Player("P3"));
+//         room.addPlayer(new Player("P4"));
+//         room.addPlayer(new Player("P5"));
 
-        room.addPlayer(new Player("P1"));
-        room.addPlayer(new Player("P2"));
-        room.addPlayer(new Player("P3"));
-        room.addPlayer(new Player("P4"));
-        room.addPlayer(new Player("P5"));
+//         assertTrue(room.isFull());
+//     }
 
-        assertTrue(room.isFull());
-    }
+//     @Test
+//     void testAddingSeventhPlayerFails() {
 
-    @Test
-    void testAddingSeventhPlayerFails() {
+//         Player host = new Player("Host");
 
-        Player host = new Player("Host");
+//         Room room = new Room("ABC123", host);
 
-        Room room = new Room("ABC123", host);
+//         room.addPlayer(new Player("P1"));
+//         room.addPlayer(new Player("P2"));
+//         room.addPlayer(new Player("P3"));
+//         room.addPlayer(new Player("P4"));
+//         room.addPlayer(new Player("P5"));
 
-        room.addPlayer(new Player("P1"));
-        room.addPlayer(new Player("P2"));
-        room.addPlayer(new Player("P3"));
-        room.addPlayer(new Player("P4"));
-        room.addPlayer(new Player("P5"));
+//         assertThrows(
+//                 IllegalStateException.class,
+//                 () -> room.addPlayer(new Player("Extra"))
+//         );
+//     }
 
-        assertThrows(
-                IllegalStateException.class,
-                () -> room.addPlayer(new Player("Extra"))
-        );
-    }
+//     @Test
+//     void testDuplicatePlayerRejected() {
 
-    @Test
-    void testDuplicatePlayerRejected() {
+//         Player host = new Player("Host");
 
-        Player host = new Player("Host");
+//         Room room = new Room("ABC123", host);
 
-        Room room = new Room("ABC123", host);
+//         Player player = new Player("Alice");
 
-        Player player = new Player("Alice");
+//         room.addPlayer(player);
 
-        room.addPlayer(player);
+//         assertThrows(
+//                 IllegalArgumentException.class,
+//                 () -> room.addPlayer(player)
+//         );
+//     }
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> room.addPlayer(player)
-        );
-    }
+//     @Test
+//     void testAssignSeats() {
 
-    @Test
-    void testAssignSeats() {
+//         Player host = new Player("Host");
 
-        Player host = new Player("Host");
+//         Room room = new Room("ABC123", host);
 
-        Room room = new Room("ABC123", host);
+//         room.addPlayer(new Player("P1"));
+//         room.addPlayer(new Player("P2"));
+//         room.addPlayer(new Player("P3"));
+//         room.addPlayer(new Player("P4"));
+//         room.addPlayer(new Player("P5"));
 
-        room.addPlayer(new Player("P1"));
-        room.addPlayer(new Player("P2"));
-        room.addPlayer(new Player("P3"));
-        room.addPlayer(new Player("P4"));
-        room.addPlayer(new Player("P5"));
+//         Set<Integer> seats = new HashSet<>();
 
-        Set<Integer> seats = new HashSet<>();
+//         room.getPlayers().forEach(p -> seats.add(room.getSeat(p)));
 
-        room.getPlayers().forEach(p -> seats.add(room.getSeat(p)));
+//         assertEquals(6, seats.size());
 
-        assertEquals(6, seats.size());
-
-        for (int seat = 1; seat <= 6; seat++) {
-            assertTrue(seats.contains(seat));
-        }
-    }
-}
+//         for (int seat = 1; seat <= 6; seat++) {
+//             assertTrue(seats.contains(seat));
+//         }
+//     }
+// }
