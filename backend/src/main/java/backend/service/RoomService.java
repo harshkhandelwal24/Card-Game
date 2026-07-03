@@ -348,9 +348,15 @@ public class RoomService {
                         ))
                         .collect(Collectors.toList());
 
+                    // Get current winner based on cards played so far
+                    Player currentWinner = null;
+                    if (round.getTrickEngine() != null) {
+                        currentWinner = round.getTrickEngine().getCurrentWinner();
+                    }
+
                     latestTrick = new TrickSnapshotDto(
-                        currentTrick.getWinner() == null ? null : currentTrick.getWinner().getId(),
-                        currentTrick.getWinner() == null ? null : currentTrick.getWinner().getName(),
+                        currentWinner == null ? null : currentWinner.getId(),
+                        currentWinner == null ? null : currentWinner.getName(),
                         currentTrick.getPoints(),
                         playedCards
                     );

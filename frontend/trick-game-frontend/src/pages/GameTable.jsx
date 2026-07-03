@@ -14,6 +14,7 @@ import EventLog from "../components/game/EventLog";
 import AuctionPanel from "../components/game/AuctionPanel";
 import TrumpModal from "../components/game/TrumpModal";
 import PartnerModal from "../components/game/PartnerModal";
+import RoundInfoPanel from "../components/game/RoundInfoPanel";
 
 export default function GameTable() {
   const { roomId } = useParams();
@@ -140,7 +141,6 @@ export default function GameTable() {
   
   const trick = game.trick || game.latestTrick?.playedCards || [];
   const lastCompletedTrickFromState = game.lastCompletedTrick?.playedCards || [];
-  const trickWinner = game.latestTrick?.winnerName || null;
   const scores = game.scores || game.playerScores || {};
   const events = game.events || [];
   
@@ -361,6 +361,11 @@ export default function GameTable() {
           50% { transform: translate(-50%, -50%) scale(1.03); opacity: 1; }
           100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
+
+        @keyframes slideDown {
+          0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+          100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
       `}</style>
 
       {/* TOP BAR */}
@@ -380,6 +385,8 @@ export default function GameTable() {
       {/* MAIN TABLE AREA */}
       <div style={styles.tableArea} ref={tableAreaRef}>
 
+        <RoundInfoPanel />
+
         <button
           type="button"
           onClick={() => setShowLastTrick((value) => !value)}
@@ -395,7 +402,7 @@ export default function GameTable() {
           hands={hands}
         />
 
-        <TrickCenter ref={trickCenterRef} trick={trick} />
+        <TrickCenter ref={trickCenterRef} trick={trick} trickWinner={game.latestTrick?.winnerName} />
 
         {flyingCard && (
           <div style={{ ...styles.flightCard, ...flyingCard }}>
@@ -461,11 +468,6 @@ export default function GameTable() {
             <div style={styles.trickCompleteIndicator}>
               ✨ Trick Complete - 6 Cards Played
             </div>
-            {trickWinner && (
-              <div style={styles.trickWinnerDisplay}>
-                🏆 {trickWinner} wins this trick!
-              </div>
-            )}
             <div style={styles.hostControlOverlay}>
               <button
                 onClick={handleAdvanceToNextTrick}
@@ -737,9 +739,9 @@ const styles = {
 
   hostControlOverlay: {
     position: "fixed",
-    bottom: "30px",
+    bottom: "100px",
     right: "30px",
-    zIndex: 9999,
+    zIndex: 99999,
     pointerEvents: "auto"
   },
 
@@ -764,8 +766,8 @@ const styles = {
 
   trickCompleteIndicator: {
     position: "fixed",
-    bottom: "100px",
-    right: "30px",
+    top: "90px",
+    right: "200px",
     zIndex: 9998,
     padding: "12px 20px",
     borderRadius: "12px",
@@ -780,8 +782,8 @@ const styles = {
 
   roundCompleteIndicator: {
     position: "fixed",
-    bottom: "100px",
-    right: "30px",
+    top: "90px",
+    left: "220px",
     zIndex: 9998,
     padding: "12px 20px",
     borderRadius: "12px",

@@ -1,8 +1,9 @@
 import { forwardRef } from "react";
 import Card from "./Card";
 
-const TrickCenter = forwardRef(({ trick = [] }, ref) => {
+const TrickCenter = forwardRef(({ trick = [], trickWinner = null }, ref) => {
   const count = trick.length;
+  const isComplete = count === 6;
 
   return (
     <div style={styles.center} ref={ref}>
@@ -18,6 +19,14 @@ const TrickCenter = forwardRef(({ trick = [] }, ref) => {
           ))}
         </div>
       )}
+      {trickWinner && (
+        <div style={{
+          ...styles.winnerBadge,
+          ...(isComplete ? styles.winnerBadgeComplete : styles.winnerBadgeActive)
+        }}>
+          {isComplete ? "🏆" : "👑"} {trickWinner} {isComplete ? "wins" : "leading"}!
+        </div>
+      )}
     </div>
   );
 });
@@ -27,11 +36,11 @@ export default TrickCenter;
 const styles = {
   center: {
     position: "absolute",
-    left: "50%",
+    left: "35%",
     top: "50%",
     transform: "translate(-50%, -50%)",
-    width: "min(640px, 90%)",
-    minWidth: "520px",
+    width: "min(640px, 80%)",
+    minWidth: "480px",
     height: "260px",
     display: "flex",
     alignItems: "center",
@@ -40,7 +49,9 @@ const styles = {
     background: "rgba(15, 23, 42, 0.92)",
     border: "1px solid rgba(148, 163, 184, 0.2)",
     borderRadius: "20px",
-    zIndex: 10
+    zIndex: 10,
+    flexDirection: "column",
+    position: "relative"
   },
 
   row: {
@@ -74,5 +85,35 @@ const styles = {
     padding: "3px 8px",
     borderRadius: "999px",
     border: "1px solid rgba(148, 163, 184, 0.24)"
+  },
+
+  winnerBadge: {
+    position: "fixed",
+    top: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    padding: "10px 18px",
+    borderRadius: "12px",
+    fontSize: "14px",
+    fontWeight: 700,
+    border: "1px solid",
+    boxShadow: "0 8px 24px",
+    whiteSpace: "nowrap",
+    zIndex: 15,
+    transition: "all 200ms ease-out"
+  },
+
+  winnerBadgeActive: {
+    background: "linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95))",
+    color: "#dbeafe",
+    borderColor: "rgba(96, 165, 250, 0.5)",
+    boxShadow: "0 8px 24px rgba(59, 130, 246, 0.4)"
+  },
+
+  winnerBadgeComplete: {
+    background: "linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(22, 163, 74, 0.95))",
+    color: "#dcfce7",
+    borderColor: "rgba(134, 239, 172, 0.5)",
+    boxShadow: "0 8px 24px rgba(34, 197, 94, 0.4)"
   }
 };

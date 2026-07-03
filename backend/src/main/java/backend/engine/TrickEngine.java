@@ -250,6 +250,72 @@ public class TrickEngine {
         return trick.getState() == TrickState.COMPLETED;
     }
 
+    // =====================================================
+    // GET CURRENT WINNER (based on cards played so far)
+    // =====================================================
+
+    /**
+     * Calculate who is currently winning the trick based on cards played so far.
+     * This does NOT modify the trick state.
+     */
+    public Player getCurrentWinner() {
+        if (trick.getPlayedCards().isEmpty()) {
+            return null;
+        }
+
+        Player winner = null;
+        Card bestCard = null;
+        Suit leadSuit = trick.getLeadSuit();
+
+        for (Map.Entry<Player, Card> entry : trick.getPlayedCards().entrySet()) {
+            Card current = entry.getValue();
+
+            if (bestCard == null) {
+                bestCard = current;
+                winner = entry.getKey();
+                continue;
+            }
+
+            boolean currentTrump = current.getSuit() == trick.getTrumpSuit();
+            boolean bestTrump = bestCard.getSuit() == trick.getTrumpSuit();
+
+            // Trump beats non-trump
+            if (currentTrump && !bestTrump) {
+                bestCard = current;
+                winner = entry.getKey();
+                continue;
+            }
+
+            // Trump vs trump
+            if (currentTrump && bestTrump) {
+                if (rank(current) > rank(bestCard)) {
+                    bestCard = current;
+                    winner = entry.getKey();
+                }
+                continue;
+            }
+
+            // Lead suit beats off suit
+            if (!bestTrump
+                    && current.getSuit() == leadSuit
+                    && bestCard.getSuit() != leadSuit) {
+                bestCard = current;
+                winner = entry.getKey();
+                continue;
+            }
+
+            // Higher lead card
+            if (current.getSuit() == leadSuit
+                    && bestCard.getSuit() == leadSuit
+                    && rank(current) > rank(bestCard)) {
+                bestCard = current;
+                winner = entry.getKey();
+            }
+        }
+
+        return winner;
+    }
+
     public int cardsPlayed() {
 
         return trick.getPlayedCards().size();

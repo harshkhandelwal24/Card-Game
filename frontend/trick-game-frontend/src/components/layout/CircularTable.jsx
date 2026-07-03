@@ -21,7 +21,7 @@ export default function CircularTable({ players = [], currentTurn, myId, hands =
             data-player-id={p.id}
             style={{
               ...styles.player,
-              transform: `translate(${x}px, ${y}px)`,
+              transform: `translate(${x}px, ${y}px) translateY(20px)`,
               border: isTurn ? "2px solid #22c55e" : "1px solid #334155",
               boxShadow: isTurn ? "0 0 10px #22c55e" : "none",
               background: isTurn ? "#14532d" : "#1e293b"
@@ -57,29 +57,32 @@ const styles = {
 
   player: {
     position: "absolute",
-    padding: "6px 10px",
+    padding: "3px 6px",
     background: "#1e293b",
-    borderRadius: "12px",
-    fontSize: "11px",
+    borderRadius: "10px",
+    fontSize: "8px",
     transition: "all 0.3s",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "4px",
-    maxWidth: "110px"
+    gap: "2px",
+    maxWidth: "75px"
   },
 
   playerLabel: {
     whiteSpace: "nowrap",
-    fontWeight: 700
+    fontWeight: 700,
+    fontSize: "10px",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   },
 
   turnBadge: {
-    fontSize: "10px",
+    fontSize: "7px",
     color: "#d1fae5",
     fontWeight: 700,
     textTransform: "uppercase",
-    letterSpacing: "0.08em"
+    letterSpacing: "0.05em"
   },
 
   cardBackWrapper: {
