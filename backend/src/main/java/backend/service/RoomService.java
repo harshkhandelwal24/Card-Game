@@ -222,6 +222,35 @@ public class RoomService {
         return state;
     }
 
+    public RoomStateResponse advanceToNextTrick(UUID roomId) {
+        RoomEngine engine = getRoomEngine(roomId);
+        Round round = engine.getGameEngine().getCurrentRound();
+        
+        if (round == null) {
+            throw new IllegalStateException("No active round");
+        }
+        
+        engine.getGameEngine().getRoundEngine().advanceToNextTrick();
+        RoomStateResponse state = toRoomState(engine.getRoom());
+        roomEventPublisher.publishRoomState(roomId, state);
+        return state;
+    }
+
+    public RoomStateResponse startNewRound(UUID roomId) {
+        RoomEngine engine = getRoomEngine(roomId);
+        Round round = engine.getGameEngine().getCurrentRound();
+        
+        if (round == null || round.getState() != RoundState.COMPLETED) {
+            throw new IllegalStateException("Round is not complete");
+        }
+        
+        // Finish the current round and start a new one
+        engine.getGameEngine().finishRound();
+        RoomStateResponse state = toRoomState(engine.getRoom());
+        roomEventPublisher.publishRoomState(roomId, state);
+        return state;
+    }
+
     public UUID getRoomIdForPlayer(UUID roomId, String playerName) {
         return roomId;
     }

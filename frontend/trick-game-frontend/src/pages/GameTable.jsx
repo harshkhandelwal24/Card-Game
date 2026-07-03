@@ -43,6 +43,8 @@ export default function GameTable() {
   const [trickResolution, setTrickResolution] = useState(false);
   const [showLastTrick, setShowLastTrick] = useState(false);
   const [lastCompletedTrick, setLastCompletedTrick] = useState([]);
+  const [advancingTrick, setAdvancingTrick] = useState(false);
+  const [startingNewRound, setStartingNewRound] = useState(false);
   const prevTrickSnapshotRef = useRef([]);
   const tableAreaRef = useRef(null);
   const trickCenterRef = useRef(null);
@@ -138,6 +140,7 @@ export default function GameTable() {
   
   const trick = game.trick || game.latestTrick?.playedCards || [];
   const lastCompletedTrickFromState = game.lastCompletedTrick?.playedCards || [];
+  const trickWinner = game.latestTrick?.winnerName || null;
   const scores = game.scores || game.playerScores || {};
   const events = game.events || [];
   
@@ -318,6 +321,33 @@ export default function GameTable() {
     window.location.href = "/";
   };
 
+  // -------- HOST CONTROL LOGIC --------
+  const isHost = game.host?.id === myId;
+  const isTrickComplete = trick.length === 6;
+  const isRoundComplete = game.roundState === "FINISHED" || game.roundState === "COMPLETED";
+
+  const handleAdvanceToNextTrick = async () => {
+    setAdvancingTrick(true);
+    try {
+      await GameService.advanceToNextTrick(roomId);
+    } catch (err) {
+      console.error("Failed to advance to next trick:", err);
+    } finally {
+      setAdvancingTrick(false);
+    }
+  };
+
+  const handleStartNewRound = async () => {
+    setStartingNewRound(true);
+    try {
+      await GameService.startNewRound(roomId);
+    } catch (err) {
+      console.error("Failed to start new round:", err);
+    } finally {
+      setStartingNewRound(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <style>{`
@@ -423,6 +453,55 @@ export default function GameTable() {
           <div style={styles.overlay}>
             <PartnerModal roomId={roomId} />
           </div>
+        )}
+
+        {/* HOST CONTROLS - ADVANCE TO NEXT TRICK */}
+        {isHost && isTrickComplete && !isRoundComplete && game.phase === "PLAYING" && (
+          <>
+            <div style={styles.trickCompleteIndicator}>
+              ✨ Trick Complete - 6 Cards Played
+            </div>
+            {trickWinner && (
+              <div style={styles.trickWinnerDisplay}>
+                🏆 {trickWinner} wins this trick!
+              </div>
+            )}
+            <div style={styles.hostControlOverlay}>
+              <button
+                onClick={handleAdvanceToNextTrick}
+                disabled={advancingTrick}
+                style={{
+                  ...styles.hostControlButton,
+                  opacity: advancingTrick ? 0.6 : 1,
+                  cursor: advancingTrick ? "not-allowed" : "pointer"
+                }}
+              >
+                {advancingTrick ? "⏳ Advancing..." : "➡️ NEXT TRICK"}
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* HOST CONTROLS - START NEW ROUND */}
+        {isHost && isRoundComplete && (
+          <>
+            <div style={styles.roundCompleteIndicator}>
+              🏆 Round Complete - Ready for Next Round
+            </div>
+            <div style={styles.hostControlOverlay}>
+              <button
+                onClick={handleStartNewRound}
+                disabled={startingNewRound}
+                style={{
+                  ...styles.hostControlButton,
+                  opacity: startingNewRound ? 0.6 : 1,
+                  cursor: startingNewRound ? "not-allowed" : "pointer"
+                }}
+              >
+                {startingNewRound ? "⏳ Starting..." : "🎲 START NEW ROUND"}
+              </button>
+            </div>
+          </>
         )}
 
       </div>
@@ -654,5 +733,64 @@ const styles = {
     top: 20,
     left: 20,
     zIndex: 50
+  },
+
+  hostControlOverlay: {
+    position: "fixed",
+    bottom: "30px",
+    right: "30px",
+    zIndex: 9999,
+    pointerEvents: "auto"
+  },
+
+  hostControlButton: {
+    padding: "14px 24px",
+    borderRadius: "12px",
+    border: "2px solid #1e3a8a",
+    background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+    color: "white",
+    fontSize: "16px",
+    fontWeight: 700,
+    cursor: "pointer",
+    boxShadow: "0 12px 28px rgba(37, 99, 235, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset",
+    transition: "all 200ms ease-out",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    whiteSpace: "nowrap",
+    minWidth: "160px",
+    justifyContent: "center"
+  },
+
+  trickCompleteIndicator: {
+    position: "fixed",
+    bottom: "100px",
+    right: "30px",
+    zIndex: 9998,
+    padding: "12px 20px",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(22, 163, 74, 0.95))",
+    color: "white",
+    fontSize: "14px",
+    fontWeight: 700,
+    border: "1px solid rgba(134, 239, 172, 0.5)",
+    boxShadow: "0 8px 24px rgba(34, 197, 94, 0.4)",
+    animation: "softGlow 1.6s ease-in-out infinite"
+  },
+
+  roundCompleteIndicator: {
+    position: "fixed",
+    bottom: "100px",
+    right: "30px",
+    zIndex: 9998,
+    padding: "12px 20px",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg, rgba(234, 179, 8, 0.95), rgba(202, 138, 4, 0.95))",
+    color: "#111827",
+    fontSize: "14px",
+    fontWeight: 700,
+    border: "1px solid rgba(250, 204, 21, 0.5)",
+    boxShadow: "0 8px 24px rgba(234, 179, 8, 0.4)",
+    animation: "softGlow 1.6s ease-in-out infinite"
   }
 };

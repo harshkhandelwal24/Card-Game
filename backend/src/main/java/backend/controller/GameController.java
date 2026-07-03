@@ -68,4 +68,16 @@ public class GameController {
             @RequestBody PlayCardRequest request) {
         return ResponseEntity.ok(roomService.playCard(roomId, request));
     }
+
+    @PostMapping("/trick/next")
+    public ResponseEntity<RoomStateResponse> advanceToNextTrick(
+            @PathVariable UUID roomId) {
+        return ResponseEntity.ok(roomService.advanceToNextTrick(roomId));
+    }
+
+    @PostMapping("/round/next")
+    public ResponseEntity<RoomStateResponse> startNewRound(
+            @PathVariable UUID roomId) {
+        return ResponseEntity.ok(roomService.startNewRound(roomId));
+    }
 }

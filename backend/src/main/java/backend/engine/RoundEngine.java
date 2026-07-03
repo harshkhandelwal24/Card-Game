@@ -258,10 +258,8 @@ public class RoundEngine {
     // Check if played card is a partner card and reveal teammate
     checkPartnerCardReveal(player, card);
 
-    // If trick completed, create next trick automatically
-    if (trickEngine.getTrick().getState() == TrickState.COMPLETED) {
-        handleTrickCompletion();
-    }
+    // Don't automatically advance - wait for host to manually advance via button
+    // This keeps the trick visible on screen until the host clicks "Next Trick"
 }
 
     // =====================================
@@ -456,5 +454,75 @@ public void startPlayPhase() {
 public TrickEngine getTrickEngine() {
     return trickEngine;
 }
+
+    // =====================================
+    // MANUAL TRICK ADVANCEMENT
+    // =====================================
+
+    /**
+     * Manually advance to the next trick (called by host)
+     * This is equivalent to the automatic advancement when a trick completes
+     */
+    public void advanceToNextTrick() {
+        Trick completed = trickEngine.getTrick();
+
+        if (completed.getState() != TrickState.COMPLETED) {
+            throw new IllegalStateException("Current trick is not complete");
+        }
+
+        // Store completed trick
+        round.addTrick(completed);
+
+        if (round != null && completed.getWinner() != null) {
+            String message = completed.getWinner().getName()
+                    + " won the trick with "
+                    + completed.getPoints()
+                    + " points";
+            log.info("TRICK_COMPLETED: {}", message);
+            round.addEvent(new GameEvent("TRICK_COMPLETED", message, completed.getWinner().getName()));
+        }
+
+        // Increment trick count
+        round.nextTrick();
+
+        Player nextLeader = completed.getWinner();
+
+        if (nextLeader == null) {
+            throw new IllegalStateException("Trick winner cannot be null");
+        }
+
+        // If round is complete, don't create next trick
+        if (round.getCurrentTrickNumber() >= 8) {
+            scoring();
+            round.setState(RoundState.COMPLETED);
+            return;
+        }
+
+        // Create next trick
+        Trick nextTrick = new Trick();
+        nextTrick.setTrumpSuit(round.getTrumpSuit());
+
+        trickEngine = new TrickEngine(
+                nextTrick,
+                players,
+                round.getTrumpSuit()
+        );
+
+        trickEngine.setRound(round);
+        round.setTrickEngine(trickEngine);
+
+        trickEngine.startTrick(nextLeader);
+    }
+
+    /**
+     * Check if current trick is ready to be advanced
+     * (i.e., all 6 cards have been played)
+     */
+    public boolean isTrickReadyForAdvance() {
+        if (trickEngine == null || trickEngine.getTrick() == null) {
+            return false;
+        }
+        return trickEngine.getTrick().getState() == TrickState.COMPLETED;
+    }
 
 }

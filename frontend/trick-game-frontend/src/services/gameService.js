@@ -58,5 +58,17 @@ export const GameService = {
     const res = await API.post(`/rooms/${roomId}/play/start`);
     useGameStore.getState().updateFromResponse(res.data);
     return res.data;
+  },
+
+  advanceToNextTrick: async (roomId) => {
+    const res = await API.post(`/rooms/${roomId}/trick/next`);
+    useGameStore.getState().updateFromResponse(res.data);
+    return res.data;
+  },
+
+  startNewRound: async (roomId) => {
+    const res = await API.post(`/rooms/${roomId}/round/next`);
+    useGameStore.getState().updateFromResponse(res.data);
+    return res.data;
   }
 };
